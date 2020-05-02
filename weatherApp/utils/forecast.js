@@ -4,17 +4,13 @@ const forecast = (lat,long,callback) => {
     urlForecast = "http://api.weatherstack.com/current?access_key=502e394f15c4aca52d029f854b02a262&query=" + lat + "," + long + "&units=f"
     request({url: urlForecast, json: true}, (error, response) => {
         if (error){
-            callback(error, undefined)
+            callback("Unable to connect to forecast service. Sry please try again later.", undefined)
         }
         else if (response.body.error){
-            callback(response.body.error,undefined)
+            callback("Unable to find location.",undefined)
         }
         else{
-            callback(undefined, {
-                weatherDes: response.body.current.weather_descriptions[0],
-                temp: response.body.current.temperature,
-                precip: response.body.current.precip
-            })
+            callback(undefined, response.body.current.weather_descriptions[0] + ". It is currently " + response.body.current.temperature + " farenheight out. There is " + response.body.current.precip + "% chance of rain.")
         }
     })
 }
