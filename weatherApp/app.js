@@ -3,15 +3,22 @@ const request = require("postman-request")
 const geocode = require("./utils/geocode")
 const forecast = require("./utils/forecast")
 
-geocode("Erode", (error, data)=> {
-    if (error){
-        return console.log("Geocode Error! ",error)
-    }
-    forecast(data.longitude, data.lattitude, (forecastError, forecastData) => {
-        if (forecastError){
-            return console.log('Forecast Error! ', forecastError)
+const userDefLocation = process.argv[2]
+
+if (!userDefLocation){
+    console.log("Address not specified. Please provide an address.")
+}
+else{
+    geocode(userDefLocation, (error, {lattitude, longitude, location} = {} )=> {
+        if (error){
+            return console.log("Geocode Error! ",error)
         }
-        console.log(data.location)
-        console.log(forecastData)
-      })
-})
+        forecast(longitude,lattitude, (forecastError, forecastData) => {
+            if (forecastError){
+                return console.log('Forecast Error! ', forecastError)
+            }
+            console.log(location)
+            console.log(forecastData)
+          })
+    })    
+}
