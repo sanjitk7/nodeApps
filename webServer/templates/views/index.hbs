@@ -8,18 +8,37 @@
     <link rel="stylesheet" href="/css/stylesheet.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <script type="text/javascript" src="js/client.js"></script>
     <link rel="icon" href="img/favicon_io/logo.png" type="image/gif" sizes="16x16">
     <title>Home</title>
 
 </head>
 <body>
+
     <div class="main-content">
         {{>header}}<br>
         <div class="container" id="main-content">
             <p class=" "> This is a weather application for everyone! We use weatherstack API and MapBox API to get weather data realtime and give you the latest weather of the location you want to check out.</p>
         </div>
+        <br>
+
+        <div class="container">
+            <form class="form-inline">
+                <div class="form-group mx-sm-3 mb-2" id="form-div">
+                    <input type="text" class="form-control" id="inputLocation" placeholder="Location">
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">submit</button>
+            </form>
+        </div>
+
+        <div class="container">
+            <p id="messageOne"></p>
+            <p id="messageTwo"></p>
+        </div>
+
     </div>
+
     {{>footer}}
+
+    <script type="text/javascript" src="js/client.js"></script>
 </body>
 </html>

@@ -13,6 +13,10 @@ body{
     min-height: 100vh;
 }
 
+#form-div{
+    margin-left: 0 !important;
+}
+
 .main-content{
     flex-grow: 1;
 }
