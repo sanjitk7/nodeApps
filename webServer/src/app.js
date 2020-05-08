@@ -1,3 +1,6 @@
+const geocode = require("./utils/geocode")
+const forecast = require("./utils/forecast")
+
 const path = require("path")
 const express = require("express")
 const hbs = require("hbs")
@@ -20,14 +23,14 @@ app.use(express.static(pathPublic))
 //set up dynamic rendering using hbs templating engine
 app.get("", (req,res) => {
     res.render("index",{
-        title: "Home",
+        title: "Weather",
         creator: "Sanjit Kumar"
     })
 })
 
 app.get("/about", (req,res) => {
     res.render("about",{
-        title: "About the Application",
+        title: "About",
         creator: "Sanjit Kumar"
     })
 })
@@ -38,6 +41,35 @@ app.get("/help", (req,res) => {
         creator: "Sanjit Kumar",
         message: "This is a placeholder for a message. Lorem ipsum."
     })
+})
+
+app.get("/weather",(req,res) => {
+    
+    const userDefLocation = req.query.address
+    if (!userDefLocation){
+        return res.send({
+            error: "Address Must Be Provided"
+        })
+    }
+
+    geocode(userDefLocation, (error, {lattitude, longitude, location} = {} )=> {
+        if (error){
+            return res.send("Geocode Error! ",error)
+        }
+        forecast(longitude,lattitude, (forecastError, forecastData) => {
+            if (forecastError){
+                return res.send('Forecast Error! ', forecastError)
+            }
+            res.send({
+                forecast: forecastData,
+                location,
+                address: userDefLocation
+                
+            })
+
+          })
+    })
+    
 })
 
 app.get("/help/*", (req,res) => {

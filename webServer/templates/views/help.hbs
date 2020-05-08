@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="/css/stylesheet.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <script type="text/javascript" src="js/client.js"></script>
     <title>Help</title>
+    <link rel="icon" href="img/favicon_io/logo.png" type="image/gif" sizes="16x16">
 </head>
 <body>
-    {{>header}}
-    <p>This is an application created by says: {{message}}</p>
+    <div class="main-content">
+        {{>header}}
+        <div class="container"><p>Helpful Article: {{message}}</p></div>
+    </div>
     {{>footer}}
 </body>
 </html>
