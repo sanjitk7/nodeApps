@@ -17,26 +17,14 @@ MongoClient.connect(connectionURL,{ useNewUrlParser:true,useUnifiedTopology: tru
 
     const db = client.db(databaseName)
 
-    // db.collection("users").find({ Age: 30 }).toArray((error, users) => {
-    //     if (error){
-    //         return console.log("Error!")
-    //     }
-    //     console.log(users)
-    // })
-
-    db.collection("tasks").findOne({ _id: new ObjectID("5ebea15ae2e2e613fd300257")}, (error, task) => {
-        if (error){
-            return console.log("Error!")
-        }
-        console.log(task)
-
-    } )
-
-    db.collection("tasks").find({ completed:1 }).toArray((error,arr) => {
-        if (error){
-            return console.log("error")
-        }
-        console.log(arr)
+    db.collection("users").deleteMany({ _id: ObjectID("5ec37bf50d5c6a04ed8d6319") }).then((result) => {
+        console.log("Deleted # ",result.deletedCount)
     })
 
+    // db.collection("users").insertMany([{ Name:"John Doe",Age:30,Location:"California" },{ Name: "Jane Doe", Age:28,Location: "California"}]).then((result) => {
+    //     console.log("Inserted # ",result.insertedCount)
+    // })
+
+    
+    
 } )
