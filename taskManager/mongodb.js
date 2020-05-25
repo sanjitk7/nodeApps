@@ -21,10 +21,6 @@ MongoClient.connect(connectionURL,{ useNewUrlParser:true,useUnifiedTopology: tru
         console.log("Deleted # ",result.deletedCount)
     })
 
-    // db.collection("users").insertMany([{ Name:"John Doe",Age:30,Location:"California" },{ Name: "Jane Doe", Age:28,Location: "California"}]).then((result) => {
-    //     console.log("Inserted # ",result.insertedCount)
-    // })
-
     
     
 } )
