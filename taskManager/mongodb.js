@@ -14,12 +14,12 @@ MongoClient.connect(connectionURL,{ useNewUrlParser:true,useUnifiedTopology: tru
     if (error){
         return console.log("Coudn't Connect!")
     }
-
+    console.log("Connected to local mongoDB")
     const db = client.db(databaseName)
 
-    db.collection("users").deleteMany({ _id: ObjectID("5ec37bf50d5c6a04ed8d6319") }).then((result) => {
-        console.log("Deleted # ",result.deletedCount)
-    })
+    // db.collection("users").deleteMany({ _id: ObjectID("5ec37bf50d5c6a04ed8d6319") }).then((result) => {
+    //     console.log("Deleted # ",result.deletedCount)
+    // })
 
     
     
