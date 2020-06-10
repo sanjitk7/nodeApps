@@ -1,21 +1,28 @@
 const express = require("express")
 const Task = require("../models/tasks")
+const auth = require("../middleware/auth")
 
 const router = new express.Router()
 
-router.post("/tasks",(req,res)=>{
-    const newTask = new Task(req.body)
-    newTask.save().then(()=>{
-        res.status(201).send("TaskCreated!"+newTask)
-    }).catch(e=>{
-        res.status(400).send(e)
+router.post("/tasks",auth, async(req,res)=>{
+    const newTask = new Task({
+        ...req.body,
+        owner: req.user._id
     })
+    
+    try {
+        await newTask.save()
+        res.status(201).send(newTask)
+    } catch (e) {
+        res.status(400).send()
+    }
 })
 
-router.get("/tasks", async (req,res) => {
+router.get("/tasks", auth, async (req,res) => {
 
     try {
-        const allTasks = await Task.find({})
+        const allTasks = await Task.find({owner: req.user._id})
+        // await req.user.populate("tasks").execPopulate()
         if (!allTasks){
             return res.status(404).send()
         }
@@ -25,10 +32,12 @@ router.get("/tasks", async (req,res) => {
     }
 })
 
-router.get("/tasks/:id", async (req,res) => {
+router.get("/tasks/:id",auth, async (req,res) => {
     const _id = req.params.id
+
     try {
-        const foundTask = await Task.findById(_id)
+        // const foundTask = await Task.findById(_id)
+        const foundTask = await Task.findOne( { _id,owner:req.user._id } )
         if (!foundTask){
             return res.status(404).send()
         }
@@ -38,7 +47,7 @@ router.get("/tasks/:id", async (req,res) => {
     }
 })
 
-router.patch("/tasks/:id",async (req,res) => {
+router.patch("/tasks/:id", auth, async (req,res) => {
     const updateFieldsReq = Object.keys(req.body)
     const validFields = ["description", "completed"]
     const isValidateFields = updateFieldsReq.every( (field) => validFields.includes(field))
@@ -48,24 +57,25 @@ router.patch("/tasks/:id",async (req,res) => {
     }
 
     try{
-        const foundTask = await Task.findById(req.params.id)
+        const foundTask = await Task.findOne({_id: req.params.id, owner: req.user._id})
         updateFieldsReq.forEach((updateField) => foundTask[updateField] = req.body[updateField])
-        await foundTask.save()
-        const updatedTask = foundTask
+
         // const updatedTask = await Task.findByIdAndUpdate(req.params.id,req.body,{ new: true, runValidators: true})
-        if (!updatedTask){
+        if (!foundTask){
             return res.status(404).send()
         }
-        res.send(updatedTask)
+                
+        await foundTask.save()
+        res.send(foundTask)
     } catch (e) {
         res.status(400).send(e)
     }
 
 })
 
-router.delete("/tasks/:id", async (req,res) => {
+router.delete("/tasks/:id", auth, async (req,res) => {
     try {
-        const deletedTask = await Task.findByIdAndDelete(req.params.id)
+        const deletedTask = await Task.findOneAndDelete({_id:req.params.id, owner: req.user._id})
         if (!deletedTask){
             return res.status(404).send()
         }
