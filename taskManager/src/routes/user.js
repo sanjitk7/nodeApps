@@ -1,4 +1,6 @@
 const express = require("express")
+const multer = require("multer")
+const sharp = require("sharp")
 const User = require("../models/users")
 const auth = require("../middleware/auth")
 const router = new express.Router()
@@ -54,11 +56,48 @@ router.post("/users/logoutAll", auth, async (req,res) => {
     }
 })
 
+const upload = multer({
+    limits: {
+        fileSize: 1000000
+    },
+    fileFilter(req,file,cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return cb(new Error("Upload Proper File"))
+        }
+        cb(undefined,true)
+    }
+})
+
+router.post("/users/me/avatar",auth, upload.single("avatar"),async (req, res) => {
+    const buffer = await sharp(req.file.buffer).resize({ height: 250, width: 250}).png().toBuffer()
+    req.user.avatar = buffer
+    await req.user.save()
+    res.send()
+}, (error,req,res,next) => {
+    res.status(400).send({ error: error.message})
+})
+
 router.get("/users/me", auth, async (req,res) => {
     res.send(req.user)
     
 })
 
+router.get("/users/:id/avatar", async (req,res) => {
+    try{
+
+        const user = await User.findById(req.params.id)
+
+        if(!user || !user.avatar) {
+            throw new Error("Use or Profile Picture doesn't exist")
+        }
+
+        res.set("Content-Type","image/png")
+        // console.log(user.avatar)
+        res.send(user.avatar)
+    } catch (e) {
+        res.status(404).send()
+    }
+})
 
 
 router.patch("/users/me",auth, async (req,res) => {
@@ -86,6 +125,16 @@ router.delete("/users/me", auth, async (req,res) => {
         await req.user.remove()
         res.send()
     } catch (e) {
+        res.status(500).send()
+    }
+})
+
+router.delete("/users/me/avatar", auth, async (req,res) => {
+    try {
+        req.user.avatar = undefined
+        await req.user.save()
+        res.send()
+    } catch (e){
         res.status(500).send()
     }
 })
