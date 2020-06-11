@@ -84,7 +84,7 @@ userSchema.methods.toJSON = function () {
 
 userSchema.methods.generateToken = async function () {
     const findUser = this
-    const token = jwt.sign({ _id:findUser._id.toString() }, "sanjitk7")
+    const token = jwt.sign({ _id:findUser._id.toString() }, process.env.JWT_SECRET)
     
     // console.log(findUser)
     findUser.tokens = findUser.tokens.concat({ token })
@@ -127,7 +127,7 @@ userSchema.pre("save", async function(next) {
 })
 
 //delete tasks of the user being deleted
-userSchema.pre("remove", async function(){
+userSchema.pre("remove", async function(next){
     const user = this
 
     await Task.deleteMany({ owner:user._id })
