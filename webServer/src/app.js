@@ -12,6 +12,7 @@ const port = process.env.PORT || 3000
 const pathPublic = path.join(__dirname,"../public")
 const viewsPath = path.join(__dirname,"../templates/views")
 const partialsPath = path.join(__dirname,"../templates/partials")
+console.log(viewsPath)
 
 //set up hbs as templating engine and location
 app.set("view engine","hbs")
