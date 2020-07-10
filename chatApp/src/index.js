@@ -20,12 +20,9 @@ let count = 0
 // client emits -> "increment" -> server
 
 io.on("connection", (socket)=>{
-    console.log("New Socket Connection")
-    socket.emit("countUpdated",count)
-    socket.on("increment", ()=>{
-        count+=1
-        // socket.emit("countUpdated",count)
-        io.emit("countUpdated",count)
+    socket.emit("message","Welcome")
+    socket.on("sendMessage", (data)=> {
+        io.emit("message",data)
     })
 })
 
