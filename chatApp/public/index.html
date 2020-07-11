@@ -3,45 +3,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/chat.css">
+    <!-- <link rel="stylesheet" href="/css/chat.css"> -->
+    <link rel="stylesheet" href="/css/styles.min.css">
+    <link rel="icon" href="/img/favicon.png">
     <title>Chat</title>
 </head>
 <body>
-    <div class="container">
-        <h1 >Chat</h1>
-        <br>
-        <p>This is a chat application for everyone! We use socket.io to creat a realtime virtual chatroom for text messages.</p>
-        <br>
-        <div id="messages"></div>
-        <br>
-        <div class="container main-content" id="form-div">
-            <form id="message-form">
-                <div class="form-group">
-                <label for="exampleInputEmail1">Message</label>
-                <input name="message" class="form-control" id="messageInput">
-                </div>
-                <button type="submit" id="sendMessage" class="btn btn-secondary">Submit</button>
-            </form>
+    <div class="chat">
+        <div class="chat__sidebar">
+
         </div>
-        <br>
-        <p>Share your location!</p><br>
-        <button id="sendLocation" class="btn btn-info">Send Location</button>
+        <div class="chat__main">
+            <div id="messages" class="chat__messages"></div>
+
+            <div class="compose">
+                <form id="message-form">
+                    <input name="message" placeholder="Message">
+                    <button type="submit" id="sendMessage">Send</button>
+                </form>
+                <button id="sendLocation">Send location</button>
+            </div>                
+        </div>
     </div>
 
-    <script  id="messageTemplate" type="text/html">
-        <div>
+    <script id="messageTemplate" type="text/html">
+        <div class="message">
             <p>
-                {{createdAt}} - {{message}}
+                <span class="message__name">Some User Name</span>
+                <span class="message__meta">{{createdAt}}</span>
             </p>
+            <p>{{message}}</p>
         </div>
     </script>
-    <script  id="locationTemplate" type="text/html">
-        <div>
-            <p>{{createdAt}} - 
-                <a href={{locationURL}}>my current location</a>
+
+    <script id="locationTemplate" type="text/html">
+        <div class="message">
+            <p>
+                <span class="message__name">Some User Name</span>
+                <span class="message__meta">{{createdAt}}</span>
             </p>
+            <p><a href="{{locationURL}}" target="_blank">My current location</a></p>
         </div>
     </script>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
