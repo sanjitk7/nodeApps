@@ -20,9 +20,19 @@ let count = 0
 // client emits -> "increment" -> server
 
 io.on("connection", (socket)=>{
-    socket.emit("message","Welcome")
+    socket.emit("message","Welcome!")
+    socket.broadcast.emit("message","A new user has joined!")
+
     socket.on("sendMessage", (data)=> {
         io.emit("message",data)
+    })
+
+    socket.on("sendLocation", (position)=>{
+        io.emit("message",`https://www.google.com/maps?q=${position.lattitude},${position.longitude}`)
+    })
+
+    socket.on("disconnect",()=>{
+        io.emit("message","A user has left!")
     })
 })
 
