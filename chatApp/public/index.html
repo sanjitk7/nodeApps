@@ -12,6 +12,8 @@
         <br>
         <p>This is a chat application for everyone! We use socket.io to creat a realtime virtual chatroom for text messages.</p>
         <br>
+        <div id="messages"></div>
+        <br>
         <div class="container main-content" id="form-div">
             <form id="message-form">
                 <div class="form-group">
@@ -25,6 +27,18 @@
         <p>Share your location!</p><br>
         <button id="sendLocation" class="btn btn-info">Send Location</button>
     </div>
+
+    <script  id="messageTemplate" type="text/html">
+        <div>
+            <p>
+                {{message}}
+            </p>
+        </div>
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chat.js"></script>
 </body>
