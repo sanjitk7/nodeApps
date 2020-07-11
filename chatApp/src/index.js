@@ -1,3 +1,4 @@
+const {generateMessage,generateLocation} = require("./utils/messages")
 const http = require("http")
 const express = require("express")
 const path = require("path")
@@ -21,8 +22,8 @@ let count = 0
 // client emits -> "increment" -> server
 
 io.on("connection", (socket)=>{
-    socket.emit("message","Welcome!")
-    socket.broadcast.emit("message","A new user has joined!")
+    socket.emit("message",generateMessage("Welcome!"))
+    socket.broadcast.emit("message",generateMessage("A new user has joined!"))
 
     socket.on("sendMessage", (data, callback)=> {
         
@@ -31,18 +32,18 @@ io.on("connection", (socket)=>{
             return callback("Profanity is not allowed!")
         }
         
-        io.emit("message",data)
+        io.emit("message",generateMessage(data))
 
         callback()
     })
 
     socket.on("sendLocation", (position,callback)=>{
-        io.emit("message",`https://www.google.com/maps?q=${position.lattitude},${position.longitude}`)
-        callback("sent")
+        io.emit("locationMessage",generateLocation(`https://www.google.com/maps?q=${position.lattitude},${position.longitude}`))
+        callback()
     })
 
     socket.on("disconnect",()=>{
-        io.emit("message","A user has left!")
+        io.emit("message",generateMessage("A user has left!"))
     })
 })
 
