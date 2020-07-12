@@ -1,14 +1,16 @@
-const generateMessage = (text)=>{
+const generateMessage = (text,displayname)=>{
     return {
         text,
-        createdAt: new Date().getTime()
+        createdAt: new Date().getTime(),
+        displayname
     }
 }
 
-const generateLocation = (location)=>{
+const generateLocation = (location,displayname)=>{
     return {
         location,
-        createdAt: new Date().getTime()
+        createdAt: new Date().getTime(),
+        displayname
     }
 }
 

@@ -6,28 +6,71 @@ $inputForm = $messageForm.querySelector("input")
 $submitBtn = $messageForm.querySelector("#sendMessage")
 $locationBtn = document.querySelector("#sendLocation")
 $messages = document.querySelector("#messages")
+$sideBar = document.querySelector("#chatSidebar")
 
 // Mustache templates
 messageTemplate = document.querySelector("#messageTemplate").innerHTML
 locationTemplate = document.querySelector("#locationTemplate").innerHTML
+roomDataTemplate = document.querySelector("#roomDataTemplate").innerHTML
 
+// Options
+const {displayname, room} = Qs.parse(location.search, {ignoreQueryPrefix: true})
+
+const autoscroll = () => {
+    // New message element
+    const $newMessage = $messages.lastElementChild
+
+    // Height of the new message
+    const newMessageStyles = getComputedStyle($newMessage)
+    const newMessageMargin = parseInt(newMessageStyles.marginBottom)
+    const newMessageHeight = $newMessage.offsetHeight + newMessageMargin
+
+    // Visible height
+    const visibleHeight = $messages.offsetHeight
+
+    // Height of messages container
+    const containerHeight = $messages.scrollHeight
+
+    // How far have I scrolled?
+    const scrollOffset = $messages.scrollTop + visibleHeight
+
+    if (containerHeight - newMessageHeight <= scrollOffset) {
+        $messages.scrollTop = $messages.scrollHeight
+    }
+}
 
 socket.on("message",(message)=> {
+    console.log(message)
     const html = Mustache.render(messageTemplate, {
         message: message.text,
-        createdAt: moment(message.createdAt).format("hh:mm a")
+        createdAt: moment(message.createdAt).format("hh:mm a"),
+        displayname: message.displayname
     })
     $messages.insertAdjacentHTML("beforeend",html)
     console.log(message)
+
+    autoscroll()
 })
 
 socket.on("locationMessage",(locationURL)=>{
     const html = Mustache.render(locationTemplate, {
         locationURL:location.location,
-        createdAt: moment(location.createdAt).format("hh:mm a")
+        createdAt: moment(location.createdAt).format("hh:mm a"),
+        displayname:locationURL.displayname
     })
     $messages.insertAdjacentHTML("beforeend",html)
-    console.log(locationURL)
+    // console.log(locationURL)
+
+    autoscroll()
+})
+
+socket.on("roomData", ({room,users})=>{
+    const html = Mustache.render(roomDataTemplate, {
+        room,
+        users
+    })
+    $sideBar.innerHTML = html
+
 })
 
 $messageForm.addEventListener("submit", (e)=>{
@@ -66,4 +109,11 @@ $locationBtn.addEventListener("click",()=>{
             $locationBtn.removeAttribute("disabled")
         })
     })
+})
+
+socket.emit("join", {displayname, room}, (error)=> {
+    if (error){
+        alert(error)
+        location.href = "/"
+    }
 })
